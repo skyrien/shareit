@@ -69,6 +69,8 @@ function AddUser($emailAddress, $newPassword)
 	$result = mysql_query($query);
 	if (!$result) die ("Query failed. Or user exists" . mysql_error());
 	$rows = mysql_num_rows($result);
+	
+	//Return error
 	if ($rows > 0)
 	{
 		echo '<br>Oops, this account already exists. Go to login link 
