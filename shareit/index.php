@@ -14,7 +14,7 @@
 require_once './shared/sql_cfg_local.php'; 
 require_once './shared/db_ops.php';
 global $db_server;
- 
+global $postResult;
  
 //Checking for SHAREIT Session Cookies
  
@@ -38,7 +38,7 @@ if (isset($_POST['email']) && isset($_POST['password']))
 	//This now includes sha1 hashing of the password string
 	$user_password = sha1($pw_salt . sanitizeString($_POST['password']));
 	
-	// check exists
+	// check exists-returns UID if found
 	$validateResult = SigninValidate($user_email, $user_password);
 	
 	// This is the error case
@@ -49,8 +49,9 @@ if (isset($_POST['email']) && isset($_POST['password']))
 	}
 	else // User found, password match
 	{
-		setcookie('uid', $postResult, time()+ 60*60*24*7, '/');
+		//setcookie('uid', $validateResult, time()+ 60*60*24*7, '/');
 		//setcookie('uid', $postResult, time()+ 60*60*24*7, '/');
+		$postResult = "<h2>User found.</h2>";
 	}	
 }
 
@@ -85,8 +86,12 @@ if (isset($_POST['email']) && isset($_POST['password']))
 
 _END;
 
-//Signin block
-echo <<< _END
+if ($postResult != null)
+{
+	echo $postResult;
+}
+
+else echo <<< _END
 <h2>Current users sign in here</h2>
 <form method="post" action="index.php"/>
 	Email: <br><input type="text" name="email"/><br>
