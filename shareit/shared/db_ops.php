@@ -7,13 +7,18 @@
  * connection logic, entry viewing, and add-remove user logic. 
  * Graphical version is at ./admin/users.php
  */
-require_once 'sql_cfg_local.php';
-require_once 'sql_errors.php';
+require_once './sql_cfg_local.php';
+require_once './sql_errors.php';
 
 //initializes connection and selects the default shareit db
 function DBConnect($db_host, $db_db, $db_user, $db_pw)
 {
-	// Initiates connection to sql server
+	echo $db_host . "<br>";
+	echo $db_db . "<br>";
+	echo $db_user . "<br>";
+	echo $db_pw . "<br>";
+	
+	// Initiates connection to sql server	
 	$db_server = mysql_connect($db_host, $db_user, $db_pw);
 	if(!$db_server) die("Unable to connect to MySQL " . mysql_error());
 
@@ -36,7 +41,48 @@ function sanitizeString($input)
 	return $input;
 }
 
-// USER OPERATIONS (Add, Remove, Update)
+// USER OPERATIONS (Check, Add, Remove, Update)
+/*=== Signin Validate ================================================
+This code checks to see if the requested user exists
+
+Flow: 	1. If form contents is invalid, return -1.
+		2. If form is valid, return -2 if user does not.
+=====================================================================*/
+// Input parameters //
+// string emailAddress - Email address given in the form
+// string newPassword - Password entered in the form
+function SigninValidate($emailAddress, $incomingPassword)
+{
+	// Additional input validation goes here
+	$email = $emailAddress;
+	$password = $incomingPassword;
+	//form failure result
+	//return -1; 				
+	
+	$db_server = DBConnect( $GLOBALS['db_hostname'],
+							$GLOBALS['db_database'],
+							$GLOBALS['db_username'],
+							$GLOBALS['db_password']);
+		
+	// Code to check if "emailAddress" exists
+	$query = "SELECT * from tbl_credential WHERE username=\"$email\" AND password=\"$password\"";
+	$result = mysql_query($query);
+	if (!$result) die ("Query failed." . mysql_error());
+	$rows = mysql_num_rows($result);
+	
+	//match found
+	if ($rows == 1)
+	{
+		$uid = mysql_result($result, 0,'uid');
+		DBDisconnect($db_server);
+		return $uid;
+	}
+	else // this means that there was either zero, or more than 1 row returned
+	{
+		return -2;
+	}
+}
+
 /*=== Add user experience ============================================
 Here we will be creating the code to add a new user. Taking in unique
 values per user (by email), we create a new user object in the table.
@@ -58,10 +104,10 @@ function AddUser($emailAddress, $newPassword, $firstName, $lastName)
 	$password = $newPassword;
 	//form failure result
 	//return -1; 				
-	$db_server = DBConnect( $GLOBALS[db_hostname],
-							$GLOBALS[db_database],
-							$GLOBALS[db_username],
-							$GLOBALS[db_password]);
+	$db_server = DBConnect( $GLOBALS['db_hostname'],
+							$GLOBALS['db_database'],
+							$GLOBALS['db_username'],
+							$GLOBALS['db_password']);
 		
 	// Code to check if "emailAddress" exists
 	$query = "SELECT * from tbl_credential WHERE username=\"$email\"";
@@ -94,11 +140,11 @@ function AddUser($emailAddress, $newPassword, $firstName, $lastName)
 	else
 	{
 		
-		$query = "INSERT INTO tbl_user(uid, fieldtype, field, value) VALUES ('$uid', 'profile', 'firstName', $firstname')";
+		$query = "INSERT INTO tbl_user(uid, fieldtype, field, value) VALUES ('$uid', 'profile', 'firstName', '$firstName')";
 		$result = mysql_query($query);
 		if (!$result) die ("FirstName insert failed. Do not pass go." . mysql_error());
 			
-		$query = "INSERT INTO tbl_user(uid, fieldtype, field, value) VALUES ('$uid', 'profile', 'lastName', $lastname')";
+		$query = "INSERT INTO tbl_user(uid, fieldtype, field, value) VALUES ('$uid', 'profile', 'lastName', '$lastName')";
 		$result = mysql_query($query);
 		if (!$result) die ("LastName insert failed. Do not pass go." . mysql_error());
 	}

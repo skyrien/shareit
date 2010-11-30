@@ -10,7 +10,7 @@
 /*=====================================================================
 /* Included files, Globals, HTML Header, Body
 /*===================================================================*/
-require_once '../shared/sql_config.php';
+//require_once 'shared/sql_cfg_local.php';
 require_once '../shared/db_ops.php';
 global $db_server;
 
@@ -29,9 +29,13 @@ _END;
 
 
 // Incoming POST handling code
-if(isset($_POST['email']) && isset($_POST['password']) && isset($_POST['agree']))
+if(isset($_POST['myemail']) && isset($_POST['password']) && isset($_POST['agree']))
 {
-	$user_email = sanitizeString($_POST['email']);
+	echo $_POST['myemail'] . "<br>";
+	echo $_POST['password'] . "<br>";
+	echo $_POST['agree'] . "<br>";
+	
+	$user_email = sanitizeString($_POST['myemail']);
 	$user_password = sanitizeString($_POST['password']);
 	$agree = $_POST['agree'];
 	$addResult = AddUser($user_email, $user_password);
@@ -81,7 +85,7 @@ echo "Allowed actions below:<br><br>";
 echo <<< _END
 <h2>Add new user:</h2>
 <form method="post" action="users_text.php"/>
-	Email Address (up to 100 characters)<br><input type="text" name="email"/><br>
+	Email Address (up to 100 characters)<br><input type="text" name="myemail"/><br>
 	Password (up to 32 characters)<br><input type="text" name="password"/><br>
 	I agree to the <a href="http://shareit.skyrien.com/terms.php">terms of use</a>.
 	<input type="checkbox" name="agree"/><br>
@@ -93,6 +97,7 @@ _END;
 //Closing HTML document
 echo <<< _END
 </body>
+</html>
 _END;
 
 ?>

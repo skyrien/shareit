@@ -29,6 +29,30 @@
  
  
  
+ 
+//Incoming post (signin) handling logic
+if (isset($_POST['email']) && isset($_POST['password']))
+{
+	$user_email = sanitizeString($_POST['email']);
+	//This now includes sha1 hashing of the password string
+	$user_password = sha1(sanitizeString($_POST['password']));
+	
+	// check exists
+	$addResult = AddUser($user_email, $user_password, $firstName, $lastName);
+	if (addResult < 0)
+	{
+		// we can later add code to process different errors		
+		$postResult = "<h2>User Add failed.</h2>";
+	}
+	else // Additional add code
+	{
+		$postResult = "<h2>User add success! User #$addResult has been created.</h2>";
+		//echo "User $user_email is now Share.it user #$addResult<br><br>";
+		
+		
+		//redirect user to signin
+	}	
+}
 
 //Page Header
  echo <<< _END
@@ -55,6 +79,19 @@
 
 _END;
 
+//Signin block
+echo <<< _END
+<h2>Current Users</h2>
+<form method="post" action="index.php"/>
+	Email: <br><input type="text" name="email"/><br>
+		
+	Password: <br><input type="text" name="password"/><br>
+	
+	<input type="submit" value="Sign in..."/>
+</form>
+<hr />
+_END;
+ 
  
 //Signup block -- current version redirects user to signup page; later
 //versions can have AJAX signup from the index page.
