@@ -12,7 +12,7 @@
 /*=====================================================================
 /* Included files, Globals, HTML Header, Body
 /*===================================================================*/ 
-//require_once 'shared/sql_cfg_local.php';
+require_once './shared/sql_cfg_local.php';
 require_once './shared/db_ops.php';
  global $db_server;
  global $postResult;
@@ -53,10 +53,11 @@ if (isset($_POST['myemail']) && isset($_POST['password']) && isset($_POST['agree
 	// the add user ID is given to the addResult var
 	// if failed, a negative number will be returned
 	$addResult = AddUser($user_email, $user_password, $firstName, $lastName);
-	if (addResult < 0)
+	if ($addResult < 0)
 	{
-		// we can later add code to process different errors		
-		$postResult = "<h2>User Add failed.</h2>";
+		if ($addResult == -2)
+			$postResult = "<h2>User add failed. Already exists.</h2>";
+		else $postResult = "<h2>User Add failed.</h2>";
 	}
 	else // Additional add code
 	{
@@ -104,6 +105,7 @@ _END;
 if ($postResult != null)
 {
 	echo $postResult;
+	echo "<h3>Sign in <a href=\"./index.php\">here!</a>";
 }
 
 else echo <<< _END
