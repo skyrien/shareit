@@ -13,7 +13,7 @@
 /* Included files, Globals, HTML Header, Body
 /*===================================================================*/ 
 //require_once 'shared/sql_cfg_local.php';
-require_once '../shared/db_ops.php';
+require_once './shared/db_ops.php';
  global $db_server;
  global $postResult;
  
@@ -45,7 +45,7 @@ if (isset($_POST['myemail']) && isset($_POST['password']) && isset($_POST['agree
 {
 	$user_email = sanitizeString($_POST['myemail']);
 	//This now includes sha1 hashing of the password string
-	$user_password = sha1(sanitizeString($_POST['password']));
+	$user_password = sha1($pw_salt . sanitizeString($_POST['password']));
 	$agree = $_POST['agree']; // true-false
 	$firstName = sanitizeString($_POST['firstname']);
 	$lastName = sanitizeString($_POST['lastname']);
@@ -74,10 +74,10 @@ echo <<< _END
 <head>
 <title>Account Creation - Share.It</title>
 <!-- Blueprint Framework CSS, including Fancy Type -->
-<link rel="stylesheet" href="../css/blueprint/screen.css" type="text/css" media="screen, projection">
-<link rel="stylesheet" href="../css/blueprint/print.css" type="text/css" media="print">	
-<link rel="stylesheet" href="../css/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" /> 
-<!--[if lt IE 8]><link rel="stylesheet" href="../css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->		
+<link rel="stylesheet" href="./css/blueprint/screen.css" type="text/css" media="screen, projection">
+<link rel="stylesheet" href="./css/blueprint/print.css" type="text/css" media="print">	
+<link rel="stylesheet" href="./css/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" /> 
+<!--[if lt IE 8]><link rel="stylesheet" href="./css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->		
 </head>
 	
 <body>
@@ -110,18 +110,12 @@ else echo <<< _END
 <h2>Add new user:</h2>
 <form method="post" action="signup.php">
 	Your email<br><input type="text" maxlength="100" name="myemail" /><br>
-	
 	Re-enter email<br><input type="text" maxlength="100" name="emailagain" /><br>
-	
 	New password<br><input type="text" maxlength="32" name="password" /><br>
-	
 	First name<br><input type="text" maxlength="100" name="firstname" /><br>
-	
 	Last name<br><input type="text" maxlength="100" name="lastname" /><br>
-	
 	I agree to the <a href="http://shareit.skyrien.com/terms.php">terms of use</a>.
 	<input type="checkbox" name="agree"/><br>
-	
 	<input type="submit" value="Add user..."/>
 </form>
 _END;
