@@ -1,5 +1,6 @@
 <?php
-include_once 'sql_comm.php';
-echo "This is a test message<br>";
+$pw_salt = "abcd";
+$user_password = sha1($pw_salt . "hadsadadasdadello");
+echo $user_password;
 
 ?>

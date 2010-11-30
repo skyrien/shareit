@@ -1,26 +1,24 @@
 <?php // shared/db_ops.php
 /*
- * Share.It -- ./shared/db_ops.php
+ * Share.It -- /shared/db_ops.php
  * Alexander Joo
  *  
  * This file includes frequently used database operations, including
  * connection logic, entry viewing, and add-remove user logic. 
  * Graphical version is at ./admin/users.php
  */
-require_once './sql_cfg_local.php';
-require_once './sql_errors.php';
 
 //initializes connection and selects the default shareit db
 function DBConnect($db_host, $db_db, $db_user, $db_pw)
 {
-	echo $db_host . "<br>";
-	echo $db_db . "<br>";
-	echo $db_user . "<br>";
-	echo $db_pw . "<br>";
+//	echo $db_host . "<br>";
+//	echo $db_db . "<br>";
+//	echo $db_user . "<br>";
+//	echo $db_pw . "<br>";
 	
 	// Initiates connection to sql server	
 	$db_server = mysql_connect($db_host, $db_user, $db_pw);
-	if(!$db_server) die("Unable to connect to MySQL " . mysql_error());
+	if(!$db_server) die("Unable to connect to MySQL: " . mysql_error());
 
 	// Selects db defined in sql_login
 	mysql_select_db($db_db) or die("Unable to select database: " . mysql_error());
@@ -50,7 +48,7 @@ Flow: 	1. If form contents is invalid, return -1.
 =====================================================================*/
 // Input parameters //
 // string emailAddress - Email address given in the form
-// string newPassword - Password entered in the form
+// string incomingPassword - Password entered in the form; will be SHA1 hashed and salted
 function SigninValidate($emailAddress, $incomingPassword)
 {
 	// Additional input validation goes here
@@ -63,23 +61,25 @@ function SigninValidate($emailAddress, $incomingPassword)
 							$GLOBALS['db_database'],
 							$GLOBALS['db_username'],
 							$GLOBALS['db_password']);
-		
+	if (!$db_server) die ("Unable to connect to MySQL." . mysql_error());
+							
 	// Code to check if "emailAddress" exists
 	$query = "SELECT * from tbl_credential WHERE username=\"$email\" AND password=\"$password\"";
 	$result = mysql_query($query);
 	if (!$result) die ("Query failed." . mysql_error());
 	$rows = mysql_num_rows($result);
 	
-	//match found
-	if ($rows == 1)
+	//no match found
+	switch ($rows)
 	{
-		$uid = mysql_result($result, 0,'uid');
-		DBDisconnect($db_server);
-		return $uid;
-	}
-	else // this means that there was either zero, or more than 1 row returned
-	{
-		return -2;
+		case "0": return -1; // no match found
+		case "1": // one match found--return uid
+			{
+				$uid = mysql_result($result, 0,'uid');
+				DBDisconnect($db_server);
+				return $uid;  
+			}
+		default: return -2; // more than 1 match found; error
 	}
 }
 
@@ -96,7 +96,8 @@ Flow: 	1. If form contents is invalid, return -1.
 =====================================================================*/
 // Input parameters //
 // string emailAddress - Email address given in the form
-// string newPassword - Password entered in the form
+// string newPassword - Password entered in the form - this will be salted
+// and sha1 hashed.
 function AddUser($emailAddress, $newPassword, $firstName, $lastName)
 {
 	// Additional input validation goes here

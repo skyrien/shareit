@@ -1,6 +1,6 @@
 <?php
 /*
- * Share.It -- ./admin/users_text.php
+ * Share.It -- /users_text.php
  * Alexander Joo
  *  
  * This page provides a text based view of the users that are present in the system. 
@@ -10,21 +10,31 @@
 /*=====================================================================
 /* Included files, Globals, HTML Header, Body
 /*===================================================================*/
-//require_once 'shared/sql_cfg_local.php';
-require_once '../shared/db_ops.php';
+require_once './shared/sql_cfg_local.php';
+require_once './shared/db_ops.php';
 global $db_server;
 
 echo <<< _END
 <html>
-	<head>
-		<title>Share.It Admin</title>
-	</head>
-	<body>
-		
-<h1>Share.It User Administration Console</h1><br>
-=======================================================================<br>
-Welcome to the Share.It administration panel. You can use this page to<br>
-add, remove, modify existing users and their profile data. <br><br>
+<head>
+<title>User Admin Console - Share.It</title>
+<!-- Blueprint Framework CSS, including Fancy Type -->
+<link rel="stylesheet" href="./css/blueprint/screen.css" type="text/css" media="screen, projection">
+<link rel="stylesheet" href="./css/blueprint/print.css" type="text/css" media="print">	
+<link rel="stylesheet" href="./css/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" /> 
+<!--[if lt IE 8]><link rel="stylesheet" href="./css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->		
+</head>
+<body>
+
+<!-- Requried for HTML Header (within body) -->
+<div class="container">
+<div id="header" class="span-24 last">
+    
+<h1 id="signup">Share.It User Administration Console</h1>
+</div>
+<hr />
+Welcome to the Share.It user administration panel. You can use this page to add,
+remove, modify existing users and their attributes data.
 _END;
 
 
@@ -36,7 +46,7 @@ if(isset($_POST['myemail']) && isset($_POST['password']) && isset($_POST['agree'
 	echo $_POST['agree'] . "<br>";
 	
 	$user_email = sanitizeString($_POST['myemail']);
-	$user_password = sanitizeString($_POST['password']);
+	$user_password = sha1($pw_salt . sanitizeString($_POST['password']));
 	$agree = $_POST['agree'];
 	$addResult = AddUser($user_email, $user_password);
 	if (!addResult)
@@ -53,6 +63,7 @@ if(isset($_POST['myemail']) && isset($_POST['password']) && isset($_POST['agree'
 
 // Shows updated user count, credentials
 $db_server = DBConnect($db_hostname, $db_database, $db_username, $db_password);
+if (!$db_server) die ("Database access failed: " . mysql_error());
 $query = "SELECT uid, username, created FROM tbl_credential";
 $result = mysql_query($query);
 if (!$result) die ("Database access failed: " . mysql_error());

@@ -11,8 +11,9 @@
 /*=====================================================================
 /* Included files, Globals, HTML Header, Body
 /*===================================================================*/
- require_once 'shared/db_ops.php';
- global $db_server;
+require_once './shared/sql_cfg_local.php'; 
+require_once './shared/db_ops.php';
+global $db_server;
  
  
 //Checking for SHAREIT Session Cookies
@@ -35,22 +36,21 @@ if (isset($_POST['email']) && isset($_POST['password']))
 {
 	$user_email = sanitizeString($_POST['email']);
 	//This now includes sha1 hashing of the password string
-	$user_password = sha1(sanitizeString($_POST['password']));
+	$user_password = sha1($pw_salt . sanitizeString($_POST['password']));
 	
 	// check exists
-	$addResult = AddUser($user_email, $user_password, $firstName, $lastName);
-	if (addResult < 0)
+	$validateResult = SigninValidate($user_email, $user_password);
+	
+	// This is the error case
+	if ($validateResult < 0)
 	{
 		// we can later add code to process different errors		
-		$postResult = "<h2>User Add failed.</h2>";
+		$postResult = "<h2>Oops, the email/password combination was not found.</h2>";
 	}
-	else // Additional add code
+	else // User found, password match
 	{
-		$postResult = "<h2>User add success! User #$addResult has been created.</h2>";
-		//echo "User $user_email is now Share.it user #$addResult<br><br>";
-		
-		
-		//redirect user to signin
+		setcookie('uid', $postResult, time()+ 60*60*24*7, '/');
+		//setcookie('uid', $postResult, time()+ 60*60*24*7, '/');
 	}	
 }
 
@@ -59,13 +59,13 @@ if (isset($_POST['email']) && isset($_POST['password']))
 <html>
 	<head>
 		
-		<title>Welcome to Share.It</title>
+		<title>Welcome to Share.it</title>
 		
 		<!-- Blueprint Framework CSS, including Fancy Type -->
-		<link rel="stylesheet" href="css/blueprint/screen.css" type="text/css" media="screen, projection">
-		<link rel="stylesheet" href="css/blueprint/print.css" type="text/css" media="print">	
-		<link rel="stylesheet" href="blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" /> 
-		<!--[if lt IE 8]><link rel="stylesheet" href="css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->		
+		<link rel="stylesheet" href="./css/blueprint/screen.css" type="text/css" media="screen, projection">
+		<link rel="stylesheet" href="./css/blueprint/print.css" type="text/css" media="print">	
+		<link rel="stylesheet" href="./css/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" /> 
+		<!--[if lt IE 8]><link rel="stylesheet" href="./css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->		
 	</head>
 	
 	<body>
@@ -74,20 +74,24 @@ if (isset($_POST['email']) && isset($_POST['password']))
     <div id="header" class="span-24 last">
     
     <h1 id="signup">Welcome to Share.it</h1>
+	<hr />
+    </div>
+    
+    <div id="subheader" class="span-24 last">
+	<h3 class="alt">Share.it is a social utility to help you share items with your friends and neighbors!</h3>
 	</div>
+    
 	<hr />
 
 _END;
 
 //Signin block
 echo <<< _END
-<h2>Current Users</h2>
+<h2>Current users sign in here</h2>
 <form method="post" action="index.php"/>
 	Email: <br><input type="text" name="email"/><br>
-		
 	Password: <br><input type="text" name="password"/><br>
-	
-	<input type="submit" value="Sign in..."/>
+	<input type="submit" value="Sign in!"/>
 </form>
 <hr />
 _END;
@@ -95,7 +99,7 @@ _END;
  
 //Signup block -- current version redirects user to signup page; later
 //versions can have AJAX signup from the index page.
- echo "Don't have an account? Sign up for one <a href=\"shared/signup.php\">here!</a>";
+ echo "Don't have an account? Sign up for one <a href=\"signup.php\">here.</a>";
 
 
 
