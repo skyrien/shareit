@@ -11,8 +11,9 @@
 
 /*=====================================================================
 /* Included files, Globals, HTML Header, Body
-/*===================================================================*/
- require_once '../shared/db_ops.php';
+/*===================================================================*/ 
+//require_once 'shared/sql_cfg_local.php';
+require_once '../shared/db_ops.php';
  global $db_server;
  global $postResult;
  
@@ -23,22 +24,31 @@
  
 //Redirect if already logged in
  
- 
+
+
  
  
 //Checking for FB delegated auth cookie
  
+//TEST CODE
+//AddUser('sky', 'tester', 'xand', 'skyr');
  
+// if (isset($_POST['myemail'])) echo $_POST['myemail'] . "<br>";
+// if (isset($_POST['emailagain'])) echo $_POST['emailagain'] . "<br>";
+// if (isset($_POST['password'])) echo $_POST['password'] . "<br>";
+// if (isset($_POST['firstname'])) echo $_POST['firstname'] . "<br>";
+// if (isset($_POST['lastname'])) echo $_POST['lastname'] . "<br>";
+// if (isset($_POST['agree'])) echo $_POST['agree'] . "<br>"; 
  
 //Incoming POST handling code
-if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['agree']))
+if (isset($_POST['myemail']) && isset($_POST['password']) && isset($_POST['agree']))
 {
-	$user_email = sanitizeString($_POST['email']);
+	$user_email = sanitizeString($_POST['myemail']);
 	//This now includes sha1 hashing of the password string
 	$user_password = sha1(sanitizeString($_POST['password']));
-	$agree = $_POST['agree'];
-	$firstName = sanitizeString($_POST['firstName']);
-	$lastName = sanitizeString($_POST['lastName']);
+	$agree = $_POST['agree']; // true-false
+	$firstName = sanitizeString($_POST['firstname']);
+	$lastName = sanitizeString($_POST['lastname']);
 	
 	// the add user ID is given to the addResult var
 	// if failed, a negative number will be returned
@@ -91,9 +101,6 @@ _END;
  
 //Signup block
 
-
-
-//Form goes here currently the password is not hashed. It should be.
 if ($postResult != null)
 {
 	echo $postResult;
@@ -101,16 +108,16 @@ if ($postResult != null)
 
 else echo <<< _END
 <h2>Add new user:</h2>
-<form method="post" action="signup.php"/>
-	Your email<br><input type="text" name="email"/><br>
+<form method="post" action="signup.php">
+	Your email<br><input type="text" maxlength="100" name="myemail" /><br>
 	
-	Re-enter email<br><input type="text" name="emailAgain"/><br>
+	Re-enter email<br><input type="text" maxlength="100" name="emailagain" /><br>
 	
-	New password<br><input type="text" name="password"/><br>
+	New password<br><input type="text" maxlength="32" name="password" /><br>
 	
-	First name: <br><input type="text" name="firstName"/><br>
+	First name<br><input type="text" maxlength="100" name="firstname" /><br>
 	
-	Last name: <br><input type="text" name="lastName"/><br>
+	Last name<br><input type="text" maxlength="100" name="lastname" /><br>
 	
 	I agree to the <a href="http://shareit.skyrien.com/terms.php">terms of use</a>.
 	<input type="checkbox" name="agree"/><br>
