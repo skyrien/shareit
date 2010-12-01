@@ -13,6 +13,7 @@
 /*===================================================================*/
 require_once './shared/sql_cfg_local.php'; 
 require_once './shared/db_ops.php';
+require_once './shared/user_ops.php';
 global $db_server;
 global $postResult;
  
@@ -50,11 +51,16 @@ if (isset($_POST['email']) && isset($_POST['password']))
 	else // User found, password match
 	{
 		$uid = $validateResult;
-		$firstName = 
-		$lastName = 
+		$theUser = new siuser; 
+		$theUser->getFullName($uid);
+		$first = $theUser->firstname;
+		$last = $theUser->lastname;
 		setcookie('uid', $validateResult, time()+ 60*60*24*7, '/');
-		//setcookie('uid', $postResult, time()+ 60*60*24*7, '/');
-		$postResult = "<h2>User found. Welcome </h2>";
+		setcookie('firstname', $first, time()+ 60*60*24*7, '/');
+		setcookie('lastname', $last, time()+ 60*60*24*7, '/');
+		$postResult =
+		"<h2>User found. Welcome, $first $last.</h2><br>
+		Go to your <a href=\"./home.php\">home page.</a><br><br>";
 	}	
 }
 
@@ -84,7 +90,6 @@ if (isset($_POST['email']) && isset($_POST['password']))
     <div id="subheader" class="span-24 last">
 	<h3 class="alt">Share.it is a social utility to help you share items with your friends and neighbors!</h3>
 	</div>
-    
 	<hr />
 
 _END;
@@ -101,13 +106,15 @@ else echo <<< _END
 	Password: <br><input type="text" name="password"/><br>
 	<input type="submit" value="Sign in!"/>
 </form>
+<br>
+Don't have an account? Sign up for one <a href="signup.php">here.</a>
 <hr />
 _END;
  
  
 //Signup block -- current version redirects user to signup page; later
 //versions can have AJAX signup from the index page.
- echo "Don't have an account? Sign up for one <a href=\"signup.php\">here.</a>";
+
 
 
 
