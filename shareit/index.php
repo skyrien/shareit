@@ -49,9 +49,12 @@ if (isset($_POST['email']) && isset($_POST['password']))
 	}
 	else // User found, password match
 	{
-		//setcookie('uid', $validateResult, time()+ 60*60*24*7, '/');
+		$uid = $validateResult;
+		$firstName = 
+		$lastName = 
+		setcookie('uid', $validateResult, time()+ 60*60*24*7, '/');
 		//setcookie('uid', $postResult, time()+ 60*60*24*7, '/');
-		$postResult = "<h2>User found.</h2>";
+		$postResult = "<h2>User found. Welcome </h2>";
 	}	
 }
 
