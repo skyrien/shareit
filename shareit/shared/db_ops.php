@@ -44,7 +44,9 @@ function sanitizeString($input)
 This code checks to see if the requested user exists
 
 Flow: 	1. If form contents is invalid, return -1.
-		2. If form is valid, return -2 if user does not.
+		2. If form is valid, return -2 if user does not exist.
+		3. If more than one user is found, -3 is returned.
+		4. A match is found; the UID is returned. 
 =====================================================================*/
 // Input parameters //
 // string emailAddress - Email address given in the form
@@ -72,14 +74,14 @@ function SigninValidate($emailAddress, $incomingPassword)
 	//no match found
 	switch ($rows)
 	{
-		case "0": return -1; // no match found
+		case "0": return -2; // no match found
 		case "1": // one match found--return uid
 			{
 				$uid = mysql_result($result, 0,'uid');
 				DBDisconnect($db_server);
 				return $uid;  
 			}
-		default: return -2; // more than 1 match found; error
+		default: return -3; // more than 1 match found; error
 	}
 }
 
