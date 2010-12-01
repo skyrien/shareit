@@ -57,7 +57,7 @@ if (isset($_POST['myemail']) && isset($_POST['password']) && isset($_POST['agree
 	{
 		if ($addResult == -2)
 			$postResult = "<h2>User add failed. Already exists.</h2>";
-		else $postResult = "<h2>User Add failed.</h2>";
+		else $postResult = "<h2>User Add failed. Error #$addResult</h2>";
 	}
 	else // Additional add code
 	{
@@ -105,7 +105,7 @@ _END;
 if ($postResult != null)
 {
 	echo $postResult;
-	echo "<h3>Sign in <a href=\"./index.php\">here!</a>";
+	echo "<h3>Sign in <a href=\"./index.php\">here.</a>";
 }
 
 else echo <<< _END
