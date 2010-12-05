@@ -14,6 +14,7 @@
 require_once './shared/sql_cfg_local.php'; 
 require_once './shared/db_ops.php';
 require_once './shared/user_ops.php';
+require_once './shared/page_ops.php';
 global $db_server;
 global $postResult;
  
@@ -65,35 +66,9 @@ if (isset($_POST['email']) && isset($_POST['password']))
 }
 */
 //Page Header
- echo <<< _END
-<html>
-	<head>
-		
-		<title>Welcome to Share.it</title>
-		
-		<!-- Blueprint Framework CSS, including Fancy Type -->
-		<link rel="stylesheet" href="./css/blueprint/screen.css" type="text/css" media="screen, projection">
-		<link rel="stylesheet" href="./css/blueprint/print.css" type="text/css" media="print">	
-		<link rel="stylesheet" href="./css/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" /> 
-		<!--[if lt IE 8]><link rel="stylesheet" href="./css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->		
-	</head>
-	
-	<body>
-	<!-- Requried for HTML Header (within body) -->
-	<div class="container">
-    <div id="header" class="span-24 last">
-    
-    <h1 id="signup">Welcome to Share.it</h1>
-	<hr />
-    </div>
-    
-    <div id="subheader" class="span-24 last">
-	<h3 class="alt">Share.it is a social utility to help you share items with your friends and neighbors!</h3>
-	</div>
-	<hr />
-
-_END;
-
+echo getPageHeader("Welcome to Share.it", "Welcome to Share.it",
+	"Share.it is a social utility to help you share items with your friends and neighbors!");
+ 
 if ($postResult != null)
 {
 	echo $postResult;

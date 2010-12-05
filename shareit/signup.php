@@ -14,6 +14,7 @@
 /*===================================================================*/ 
 require_once './shared/sql_cfg_local.php';
 require_once './shared/db_ops.php';
+require_once './shared/page_ops.php';
  global $db_server;
  global $postResult;
  
@@ -55,9 +56,10 @@ if (isset($_POST['myemail']) && isset($_POST['password']) && isset($_POST['agree
 	$addResult = AddUser($user_email, $user_password, $firstName, $lastName);
 	if ($addResult < 0)
 	{
-		if ($addResult == -2)
+		if ($addResult == -3)
 			$postResult = "<h2>User add failed. Already exists.</h2>";
 		else $postResult = "<h2>User Add failed. Error #$addResult</h2>";
+		
 	}
 	else // Additional add code
 	{
@@ -70,6 +72,9 @@ if (isset($_POST['myemail']) && isset($_POST['password']) && isset($_POST['agree
 }
 
 //HTML Header
+echo getPageHeader("Account Creation - Share.It", "Sign up for Share.it",
+		"Sign up for Share.it and start sharing stuff with your friends!");
+/*
 echo <<< _END
 <html>
 <head>
@@ -98,7 +103,7 @@ echo <<< _END
 	
 	
 _END;
-
+*/
  
 //Signup block
 

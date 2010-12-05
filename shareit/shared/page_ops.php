@@ -4,26 +4,40 @@
 
 
 */
-//Incoming post (signin) handling logic
-if (isset($_POST['email']) && isset($_POST['password']))
+// Page Header
+function getPageHeader($title, $bigtext, $subtext)
 {
-	$user_email = sanitizeString($_POST['email']);
-	//This now includes sha1 hashing of the password string
-	$user_password = sha1($pw_salt . sanitizeString($_POST['password']));
+ $output = <<< _END
+<html>
+	<head>
+		
+		<title>$title</title>
+		
+		<!-- Blueprint Framework CSS, including Fancy Type -->
+		<link rel="stylesheet" href="./css/blueprint/screen.css" type="text/css" media="screen, projection">
+		<link rel="stylesheet" href="./css/blueprint/print.css" type="text/css" media="print">	
+		<link rel="stylesheet" href="./css/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" /> 
+		<!--[if lt IE 8]><link rel="stylesheet" href="./css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->		
+	</head>
 	
-	// check exists-returns UID if found
-	$validateResult = SigninValidate($user_email, $user_password);
-	
-	// This is the error case
-	if ($validateResult < 0)
-	{
-		// we can later add code to process different errors		
-		$postResult = "<h2>Oops, the email/password combination was not found.</h2>";
-	}
-	else // User found, password match
-	{
-		//setcookie('uid', $validateResult, time()+ 60*60*24*7, '/');
-		//setcookie('uid', $postResult, time()+ 60*60*24*7, '/');
-		$postResult = "<h2>User found.</h2>";
-	}	
+	<body>
+	<!-- Requried for HTML Header (within body) -->
+	<div class="container">
+    <div id="header" class="span-24 last">
+    
+    <h1 id="signup">$bigtext</h1>
+	<hr />
+	</div>
+_END;
+
+if ($subtext != '')
+{
+	$output .= <<< _END
+    <div id="subheader" class="span-24 last">
+	<h3 class="alt">$subtext</h3>
+	</div>
+	<hr />
+_END;
+}
+return $output;
 }
