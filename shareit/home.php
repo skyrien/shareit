@@ -20,6 +20,38 @@ global $postResult;
 //User for this session
 $theUser = new siuser; 
 
+//Incoming POST (signin) handling logic
+if (isset($_POST['email']) && isset($_POST['password']))
+{
+	$user_email = sanitizeString($_POST['email']);
+	//This now includes sha1 hashing of the password string
+	$user_password = sha1($pw_salt . sanitizeString($_POST['password']));
+	
+	// check exists-returns UID if found
+	$validateResult = SigninValidate($user_email, $user_password);
+	
+	// This is the error case
+	if ($validateResult < 0)
+	{
+		// we can later add code to process different errors		
+		$postResult = "<h2>Oops, the email/password combination was not found.</h2>";
+	}
+	else // User found, password match
+	{
+		$uid = $validateResult;
+		$theUser = new siuser; 
+		$theUser->getFullName($uid);
+		$first = $theUser->firstname;
+		$last = $theUser->lastname;
+		setcookie('uid', $validateResult, time()+ 60*60*24*7, '/');
+		setcookie('firstname', $first, time()+ 60*60*24*7, '/');
+		setcookie('lastname', $last, time()+ 60*60*24*7, '/');
+		$postResult =
+		"<h2>User found. Welcome, $first $last.</h2><br>
+		Go to your <a href=\"./home.php\">home page.</a><br><br>";
+	}	
+}
+
 //Checking for SHAREIT Session Cookies
 
 //User is authed in

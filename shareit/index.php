@@ -31,7 +31,7 @@ global $postResult;
  
  
  
- 
+/*
 //Incoming post (signin) handling logic
 if (isset($_POST['email']) && isset($_POST['password']))
 {
@@ -63,7 +63,7 @@ if (isset($_POST['email']) && isset($_POST['password']))
 		Go to your <a href=\"./home.php\">home page.</a><br><br>";
 	}	
 }
-
+*/
 //Page Header
  echo <<< _END
 <html>
@@ -101,7 +101,7 @@ if ($postResult != null)
 
 else echo <<< _END
 <h2>Current users sign in here</h2>
-<form method="post" action="index.php"/>
+<form method="post" action="home.php"/>
 	Email: <br><input type="text" name="email"/><br>
 	Password: <br><input type="text" name="password"/><br>
 	<input type="submit" value="Sign in!"/>
