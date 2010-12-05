@@ -14,6 +14,8 @@
 require_once './shared/sql_cfg_local.php'; 
 require_once './shared/db_ops.php';
 require_once './shared/user_ops.php';
+require_once './shared/collection_ops.php';
+require_once './shared/page_ops.php';
 global $db_server;
 global $postResult;
 
@@ -40,21 +42,22 @@ if (isset($_POST['email']) && isset($_POST['password']))
 	{
 		$uid = $validateResult;
 		$theUser = new siuser; 
-		$theUser->getFullName($uid);
+		$theUser->getUserAssets($uid);
 		$first = $theUser->firstname;
 		$last = $theUser->lastname;
 		setcookie('uid', $validateResult, time()+ 60*60*24*7, '/');
 		setcookie('firstname', $first, time()+ 60*60*24*7, '/');
 		setcookie('lastname', $last, time()+ 60*60*24*7, '/');
-		$postResult =
-		"<h2>User found. Welcome, $first $last.</h2><br>
-		Go to your <a href=\"./home.php\">home page.</a><br><br>";
 	}	
 }
 
-//Checking for SHAREIT Session Cookies
+//Checking for FB delegated auth cookie -- this should only be on the index.php page
+ 
+
+//Validating SHAREIT Session Cookies
 
 //User is authed in
+//LATER, we need to add a session signature to trust the source
 if (isset($_COOKIE['uid']))
 	$theUser->uid = $_COOKIE['uid'];
 else break;
@@ -69,70 +72,50 @@ if (isset($_COOKIE['lastname']))
  
  
  
- 
-//Checking for FB delegated auth cookie
- 
- 
+
  
  //Page Header
- echo <<< _END
-<html>
-	<head>
-		
-		<title>$theUser->firstname $theUser->lastname Home</title>
-		
-		<!-- Blueprint Framework CSS, including Fancy Type -->
-		<link rel="stylesheet" href="./css/blueprint/screen.css" type="text/css" media="screen, projection">
-		<link rel="stylesheet" href="./css/blueprint/print.css" type="text/css" media="print">	
-		<link rel="stylesheet" href="./css/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" /> 
-		<!--[if lt IE 8]><link rel="stylesheet" href="./css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->		
-	</head>
-	
-	<body>
-	<!-- Requried for HTML Header (within body) -->
-	<div class="container">
-    <div id="header" class="span-24 last">
-    <h1 id="signup">Home - Share.it</h1>
-	<hr />
-    </div>
-    
-    <div id="subheader" class="span-24 last">
-	<h3 class="alt">Manage your items, and who you share it to.</h3>
-	</div>
-    
-	<hr />
-
-_END;
-
+ echo getPageHeader("$theUser->firstname $theUser->lastname Home - Share.it",
+ 				"Home - Share.it",
+ 				"Manage your items, and who you share it to.");
  
 //Section: You
 echo <<< _END
-<h2>$theUser->firstname $theUser->lastname's Stats</h2>
+<h2>Hi $theUser->firstname! Here are your stats:</h2>
 Ranking:<br>
 Friends:<br>
 Items shared:<br>
 Up-votes:<br>
 Badges:<br>
+<br>
 <hr />
 _END;
-
 
 //Section: Collections
-echo <<< _END
+$collectiontext = <<< _END
 <h2>Collections</h2>
-
-<hr />
 _END;
+//Load default collection data
+$defaultCollection = new sicollection();
+$defaultCollection->getObjects($theUser->uid, 'default');
+
+/*
+//Loads names of all collections
+$collectionCount = count($theUser->collections);
+for ($j = 0; $j < $collectionCount; $j++)
+{
+	// assigns collection name to thisCollection
+	$thisCollection .= $theUser->collections[$j];
+	//$collectiontext .= "Add item to collection";	
+}
+*/
+
+echo $collectiontext . "<br><hr />";
 
 //Section: Circles
 echo <<< _END
 <h2>Circles</h2>
-<hr />
-_END;
-
-//Section: Other options
-echo <<< _END
-<h2>Circles</h2>
+<br>
 <hr />
 _END;
 

@@ -95,6 +95,7 @@ validation).
 Flow: 	1. If form contents is invalid, return -1.
 		2. If form is valid, return -2 if user exists.
 		3. If user does not exist, enter into DB. Return success page.
+		4. This also creates the default collection / default circle
 =====================================================================*/
 // Input parameters //
 // string emailAddress - Email address given in the form
@@ -120,9 +121,12 @@ function AddUser($emailAddress, $newPassword, $firstName, $lastName)
 	//unlock	
 	if (!$result)
 	{
-		die ("Insert failed. Do not pass go." . mysql_error());
-		DBDisconnect($db_server);
-		return -3;
+		$mysqlerror = mysql_errno();
+		if ($mysqlerror = 1062)
+		{
+			DBDisconnect($db_server);
+			return -3;	
+		}
 	}
 	//We're returning the auto-incremented ID that was generated on the insert
 	else
