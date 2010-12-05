@@ -16,6 +16,8 @@ require_once './shared/db_ops.php';
 require_once './shared/user_ops.php';
 global $db_server;
 global $postResult;
+
+//User for this session
 $theUser = new siuser; 
 
 //Checking for SHAREIT Session Cookies

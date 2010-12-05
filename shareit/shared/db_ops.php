@@ -111,22 +111,7 @@ function AddUser($emailAddress, $newPassword, $firstName, $lastName)
 							$GLOBALS['db_database'],
 							$GLOBALS['db_username'],
 							$GLOBALS['db_password']);
-		
-	// Code to check if "emailAddress" exists
-	$query = "SELECT * from tbl_credential WHERE username=\"$email\"";
-	$result = mysql_query($query);
-	if (!$result) die ("Query failed." . mysql_error());
-	$rows = mysql_num_rows($result);
-	
-	//Return error
-	if ($rows > 0)
-	{
-		//echo '<br>Oops, this account already exists. Go to login link 
-		//<a href url="http://shareit.skyrien.com/index.php">here</a>';
-		DBDisconnect($db_server);
-		return -2;
-	}
-		
+			
 	// Code to enter user into DB
 	//lock
 	$query = "INSERT INTO tbl_credential(username, password) VALUES ('$email', '$password')";
@@ -142,16 +127,15 @@ function AddUser($emailAddress, $newPassword, $firstName, $lastName)
 	//We're returning the auto-incremented ID that was generated on the insert
 	else
 	{
-		
-		$query = "INSERT INTO tbl_user(uid, fieldtype, field, value) VALUES ('$uid', 'profile', 'firstName', '$firstName')";
+		//Insert first name into DB
+		$query = "INSERT INTO tbl_user(uid, fieldtype, field, value) VALUES
+		('$uid', 'profile', 'firstName', '$firstName'),
+		('$uid', 'profile', 'lastName', '$lastName'),
+		('$uid', 'collection', 'name', 'default'),
+		('$uid', 'circle', 'name', 'default')";
 		$result = mysql_query($query);
-		if (!$result) die ("FirstName insert failed. Do not pass go." . mysql_error());
-			
-		$query = "INSERT INTO tbl_user(uid, fieldtype, field, value) VALUES ('$uid', 'profile', 'lastName', '$lastName')";
-		$result = mysql_query($query);
-		if (!$result) die ("LastName insert failed. Do not pass go." . mysql_error());
+		if (!$result) die ("New user insert failed." . mysql_error());
 	}
-	
 	DBDisconnect($db_server);
 	return $uid;
 }
