@@ -2,6 +2,7 @@
 /*
  * Share.It -- /index.php
  * Alexander Joo
+ * Ibrahim Shareef 
  *  
  * This is the initial page. Includes branding header, login, sign up, and
  * Facebook Connect integration.
@@ -15,15 +16,25 @@ require_once './shared/sql_cfg_local.php';
 require_once './shared/db_ops.php';
 require_once './shared/user_ops.php';
 require_once './shared/page_ops.php';
+require_once './shared/auth/Authenticator.php';
+
 global $db_server;
 global $postResult;
  
 //Checking for SHAREIT Session Cookies
- 
- 
- 
- 
-//Redirect if already logged in
+ if (isset($_COOKIE[SHARE_IT_COOKIE])
+ {
+ 	if (ValidateShareItAuthCookie())
+ 	{
+ 		//redirect to user home page, e.g. home.php
+ 		
+ 	}
+ }
+ if (isset($_COOKIE[FACEBOOK_COOKIE])|| (isset($_POST['email']) && isset($_POST['password']))//user signed in with facebook credentials
+ {
+    //validate facebook cookie and set share.it cookie
+ 	ValidateUserSignIn();
+ }
  
  
  
@@ -85,7 +96,6 @@ else echo <<< _END
 Don't have an account? Sign up for one <a href="signup.php">here.</a>
 <hr />
 _END;
- 
  
 //Signup block -- current version redirects user to signup page; later
 //versions can have AJAX signup from the index page.
