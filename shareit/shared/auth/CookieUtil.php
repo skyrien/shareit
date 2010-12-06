@@ -56,7 +56,13 @@ function ValidateFaceBookCookie()
 
 function SetShareItAuthCookie()
 {
-	
+	//TODO: extract user uid, firstname, lastname from db, fb auth cookie for facebook signin
+	//now we have all cookie data
+	//TODO: cookie should aslo contain signature with secret key, uid, firstname, lastname
+	$format = 'uid=%s&firstname=%s&lastname=%s';
+	$cookie_payload = sprintf($format,$uid,$firstname,$lastname);
+	setcookie(SHARE_IT_COOKIE, $cookie_payload, time()+ 60*60*24*7, '/');
+	return true;
 }
 
 
