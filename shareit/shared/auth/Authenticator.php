@@ -18,9 +18,14 @@ function ValidateUserSignIn()
 	
 	if (isset($_COOKIE[FACEBOOK_COOKIE]))
 	{
-		if (ValidateFaceBookCookie()) //facebook cookie was valid
+		$vals = GetFaceBookCookie();
+		if (!$vals)
 		{
+			return false; //facebook cookie was in-valid
+		}
+		
 			//set share.it auth cookie
+			
 			SetShareItAuthCookie();
 		}
 	}

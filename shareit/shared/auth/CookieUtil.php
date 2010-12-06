@@ -10,7 +10,7 @@
  */
 
 require_once 'fb_cfg.php';
-
+require_once 'DBUtil.php';
 /*
  * Validates the share.it.com auth cookie
  * currently, only does simple checks
@@ -21,7 +21,7 @@ function ValidateShareItAuthCookie()
 	if (isset($_COOKIE[SHARE_IT_COOKIE]))
 	{
 		$output = array();
-		parse_str(trim($_COOKIE[SHARE_IT_COOKIE]), $output);
+		parse_str(trim($_COOKIE[SHARE_IT_COOKIE], '\\"'), $output);
 		if (isset($output['uid']) && isset($output['firstname']) && isset($output['lastname']))
 		{
 			return true;
@@ -31,7 +31,7 @@ function ValidateShareItAuthCookie()
 	return false;
 }
 
-function ValidateFaceBookCookie()
+function GetFaceBookCookie()
 {
 	if (isset($_COOKIE[FACEBOOK_COOKIE])
 	{
@@ -46,12 +46,12 @@ function ValidateFaceBookCookie()
           		$payload .= $key . '=' . $value;
          	}
   		 }
-	 	 if (md5($payload . FACEBOOK_SECRET) == $args['sig']) 
+	 	 if (md5($payload . FACEBOOK_SECRET) != $args['sig']) 
 	 	 {
-    		return true;
+    		return null;
 	 	 }
 	}
-	return false;
+	return $args;
 }
 
 function SetShareItAuthCookie()
