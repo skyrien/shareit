@@ -58,7 +58,7 @@ if (isset($_POST['email']) && isset($_POST['password']))
 		$_SESSION['firstname'] = $first;
 		$_SESSION['lastname'] = $last;
 
-		setcookie('shareitauth', $authtoken, time()+ 60*60*24*7, '/');
+		//setcookie('shareitauth', $authtoken, time()+ 60*60*24*7, '/');
 		
 		/* MAYBE WE DONT NEED THESE
 		setcookie('uid', $validateResult, time()+ 60*60*24*7, '/');

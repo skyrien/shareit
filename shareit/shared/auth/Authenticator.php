@@ -27,7 +27,7 @@ function ValidateUserSignIn()
 			//set share.it auth cookie
 			
 			SetShareItAuthCookie();
-		}
+		
 	}
 }
 

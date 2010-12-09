@@ -18,7 +18,7 @@ class siobject
 class sicollection
 {
 	public $collectionid; // collection name
-	public $ccount; //count of objects in collection
+	public $collectioncount; //count of objects in collection
 	public $objects; // array of objects in collection
 
 	function insertObject($itemid, $name)
@@ -37,7 +37,7 @@ class sicollection
 	// Input parameters //
 	// string ownerid - uid of the owner of the collection
 	// string collectionid - name of the collection being retrieved
-	function getObjects($ownerid, $collectionid)
+	function addObjects($ownerid, $collectionid)
 	{
 		$this->collectionid = $collectionid;
 		//the type on this object is a mysql result from tbl_collection
