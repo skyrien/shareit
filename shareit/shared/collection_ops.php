@@ -22,6 +22,9 @@ class sicollection
 	public $objects; // array of objects in collection
 
 	function insertObject($itemid, $name)
+	{
+		
+	}
 	
 	// COLLECTION OPERATIONS
 	/*=== addObject() ================================================

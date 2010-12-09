@@ -33,7 +33,7 @@ function ValidateShareItAuthCookie()
 
 function GetFaceBookCookie()
 {
-	if (isset($_COOKIE[FACEBOOK_COOKIE])
+	if (isset($_COOKIE[FACEBOOK_COOKIE]))
 	{
 		 $args = array();
   		 parse_str(trim($_COOKIE[FACEBOOK_COOKIE], '\\"'), $args);
