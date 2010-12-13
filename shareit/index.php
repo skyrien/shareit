@@ -25,20 +25,27 @@ global $postResult;
 //Checking for SHAREIT Session Cookies
  if (isset($_COOKIE[SHARE_IT_COOKIE]))
  {
- 	if (ValidateShareItAuthCookie())
+ 	if (ValidateShareItAuthCookie($_COOKIE[SHARE_IT_COOKIE]))
  	{
- 		
+ 		//redirect home page
+ 		header('location:home.php');
+ 		exit;
  	}
  		//redirect to user home page, e.g. home.php 	
  }
  if (isset($_COOKIE[FACEBOOK_COOKIE]) || (isset($_POST['email'])) && isset($_POST['password'])) //user signed in with facebook or share.it credentials
  {
     //validate facebook cookie and set share.it cookie
- 	ValidateUserSignIn($_COOKIE[FACEBOOK_COOKIE],$_POST['email'], $_POST['password']);
+ 	if (!ValidateUserSignIn($_COOKIE[FACEBOOK_COOKIE],$_POST['email'], $_POST['password']))
+ 	{
+ 		$error_msg = '<b>Invalid username or password</b>';
+ 	}
+ 	else //sign-in succeeded 
+ 	{
+ 		header('location:home.php');
+ 		exit;
+ 	}
  }
- 
- 
- 
  
 //Checking for FB delegated auth cookie
  
@@ -78,32 +85,56 @@ if (isset($_POST['email']) && isset($_POST['password']))
 }
 */
 //Page Header
-echo getPageHeader("Welcome to Share.it", "Welcome to Share.it",
-	"Share.it is a social utility to help you share items with your friends and neighbors!");
+/*echo getPageHeader("Welcome to Share.it", "Welcome to Share.it",
+	"Share.it is a social utility to help you share items with your friends and neighbors!");*/
  
 if ($postResult != null)
 {
 	echo $postResult;
 }
 
-else echo <<< _END
+/*else echo <<< _END
 <h2>Current users sign in here</h2>
-<form method="post" action="home.php"/>
+_END;*/
+ 
+//Signup block -- current version redirects user to signup page; later
+//versions can have AJAX signup from the index page.
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>share.it</title>
+  </head>
+  <body>
+    <h1>share.it</h1>
+    <h1>Sign In Here</h1>
+    <br><h2>$error_msg</h2></br>
+<form method="post" action="index.php"/>
 	Email: <br><input type="text" name="email"/><br>
 	Password: <br><input type="text" name="password"/><br>
 	<input type="submit" value="Sign in!"/>
 </form>
 <br>
-Don't have an account? Sign up for one <a href="signup.php">here.</a>
-<hr />
-_END;
- 
-//Signup block -- current version redirects user to signup page; later
-//versions can have AJAX signup from the index page.
-
-
-
-
+<p>Don't have an account? Sign up for one <a href="signup.php">here.</a></p>
+    <p><fb:login-button autologoutlink="true"></fb:login-button></p>
+    <p><fb:like></fb:like></p>
+    <div id="fb-root"></div>
+    <script type="text/javascript" src="auth.js"></script>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({appId: '130911066966920', status: true, cookie: true,
+                 xfbml: true});
+        FB.Event.subscribe('auth.sessionChange', OnAuthChange);
+        FB.getLoginStatus(OnAuthChange);
+      };
+      (function() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.src = document.location.protocol +
+          '//connect.facebook.net/en_US/all.js';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+      }());
+    </script>
 //HTML footer
 echo "</body>";
 ?>

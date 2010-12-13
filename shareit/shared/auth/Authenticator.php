@@ -27,10 +27,6 @@ function ValidateUserSignIn($facebook_cookie, $username, $password)
 	else if (isset($username) && isset($password))
 	{
 		$uid = SignInValidate($username,$password);
-		if ($uid < 0)
-		{
-			die("Invalid uid: " . $uid);
-		}
 	}
 	if ($uid) //if user found. Set share.it cookie
 	{

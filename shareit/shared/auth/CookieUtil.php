@@ -16,12 +16,12 @@ require_once './shared/db/DBUtil.php';
  * currently, only does simple checks
  * TODO: Implement secure cookie!!
  */
-function ValidateShareItAuthCookie()
+function ValidateShareItAuthCookie($cookie)
 {
-	if (isset($_COOKIE[SHARE_IT_COOKIE]))
+	if (isset($cookie))
 	{
 		$output = array();
-		parse_str(trim($_COOKIE[SHARE_IT_COOKIE], '\\"'), $output);
+		parse_str(trim($cookie, '\\"'), $output);
 		if (isset($output['uid'])))
 		{
 			return true;
@@ -31,12 +31,12 @@ function ValidateShareItAuthCookie()
 	return false;
 }
 
-function GetFaceBookCookie()
+function GetFaceBookCookie($facebook_cookie)
 {
-	if (isset($_COOKIE[FACEBOOK_COOKIE]))
+	if (isset($facebook_cookie))
 	{
 		 $args = array();
-  		 parse_str(trim($_COOKIE[FACEBOOK_COOKIE], '\\"'), $args);
+  		 parse_str(trim($facebook_cookie, '\\"'), $args);
   	     ksort($args);
   	     $payload = '';
   		 foreach ($args as $key => $value) 
