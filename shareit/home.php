@@ -16,6 +16,17 @@ require_once './shared/db_ops.php';
 require_once './shared/user_ops.php';
 require_once './shared/collection_ops.php';
 require_once './shared/page_ops.php';
+require_once './shared/auth/CookieUtil.php';
+
+if (!ValidateShareItAuthCookie($_COOKIE[SHARE_IT_COOKIE]))
+{
+	//redirect to login page
+	header('location:home.php');
+ 	exit;
+}
+
+
+
 global $db_server;
 global $postResult;
 
