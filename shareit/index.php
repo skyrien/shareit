@@ -23,7 +23,7 @@ global $postResult;
  
 
 //Checking for SHAREIT Session Cookies
- if (isset($_COOKIE['SHARE_IT_COOKIE']))
+ if (isset($_COOKIE[SHARE_IT_COOKIE]))
  {
  	if (ValidateShareItAuthCookie())
  	{
@@ -31,10 +31,10 @@ global $postResult;
  	}
  		//redirect to user home page, e.g. home.php 	
  }
- if (isset($_COOKIE['FACEBOOK_COOKIE']) || (isset($_POST['email'])) && isset($_POST['password'])) //user signed in with facebook credentials
+ if (isset($_COOKIE[FACEBOOK_COOKIE]) || (isset($_POST['email'])) && isset($_POST['password'])) //user signed in with facebook or share.it credentials
  {
     //validate facebook cookie and set share.it cookie
- 	ValidateUserSignIn();
+ 	ValidateUserSignIn($_COOKIE[FACEBOOK_COOKIE],$_POST['email'], $_POST['password']);
  }
  
  
