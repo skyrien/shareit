@@ -9,6 +9,7 @@
  * share.it.com
  */
 require_once 'fb_cfg.php';
+require_once 'cookie_cfg.php';
 require_once './shared/db/DBUtil.php';
 /*
  * Validates the share.it.com auth cookie
@@ -17,11 +18,11 @@ require_once './shared/db/DBUtil.php';
  */
 function ValidateShareItAuthCookie()
 {
-	if (isset($_COOKIE['SHARE_IT_COOKIE']))
+	if (isset($_COOKIE[SHARE_IT_COOKIE]))
 	{
 		$output = array();
-		parse_str(trim($_COOKIE['SHARE_IT_COOKIE'], '\\"'), $output);
-		if (isset($output['uid']) && isset($output['firstname']) && isset($output['lastname']))
+		parse_str(trim($_COOKIE[SHARE_IT_COOKIE], '\\"'), $output);
+		if (isset($output['uid'])))
 		{
 			return true;
 		}
@@ -32,10 +33,10 @@ function ValidateShareItAuthCookie()
 
 function GetFaceBookCookie()
 {
-	if (isset($_COOKIE['FACEBOOK_COOKIE']))
+	if (isset($_COOKIE[FACEBOOK_COOKIE]))
 	{
 		 $args = array();
-  		 parse_str(trim($_COOKIE['FACEBOOK_COOKIE'], '\\"'), $args);
+  		 parse_str(trim($_COOKIE[FACEBOOK_COOKIE], '\\"'), $args);
   	     ksort($args);
   	     $payload = '';
   		 foreach ($args as $key => $value) 
@@ -45,7 +46,7 @@ function GetFaceBookCookie()
           		$payload .= $key . '=' . $value;
          	}
   		 }
-	 	 if (md5($payload . 'FACEBOOK_SECRET') != $args['sig']) 
+	 	 if (md5($payload . FACEBOOK_SECRET) != $args['sig']) 
 	 	 {
     		return null;
 	 	 }
@@ -58,9 +59,9 @@ function SetShareItAuthCookie()
 	//TODO: extract user uid, firstname, lastname from db, fb auth cookie for facebook signin
 	//now we have all cookie data
 	//TODO: cookie should aslo contain signature with secret key, uid, firstname, lastname
-	$format = 'uid=%s&firstname=%s&lastname=%s';
-	$cookie_payload = sprintf($format,$uid,$firstname,$lastname);
-	setcookie('SHARE_IT_COOKIE', $cookie_payload, time()+ 60*60*24*7, '/');
+	$format = 'uid=%s';
+	$cookie_payload = sprintf($format,$uid);
+	setcookie(SHARE_IT_COOKIE, $cookie_payload, time()+ 60*60*24*7, '/');
 	return true;
 }
 
