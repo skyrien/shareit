@@ -12,15 +12,37 @@
 /*=====================================================================
 /* Included files, Globals, HTML Header, Body
 /*===================================================================*/
-require_once './shared/sql_cfg_local.php'; 
+require_once './shared/db/sql_cfg_local.php'; 
 require_once './shared/db_ops.php';
 require_once './shared/user_ops.php';
 require_once './shared/collection_ops.php';
 require_once './shared/page_ops.php';
 
-//How does a user get into this page? Are there POSTed here? I think
-//it's an HTTP GET request that directs a user here. PHP offers access
-//to parameters in the query string.
+$theuid;
+$theCollectionName;
+// Check for GET items 
+// u (optional) - user id
+// col (optional) - collectionid (under the user)
+// go to default collection if not present
+// go to authenticated user if u is not present
+if (isset($_GET['uid']))
+{
+	$theuid = $_GET['uid'];
+}
+// else $theuid should become the cookie id 
+$thecollection = new sicollection;
+if (isset($_GET['col']))
+{
+	$theCollectionName = $_GET['col']);
+}
+else $thecollection->collectionid = 'default';
+{	
+	$thecollection = new $theCollection;
+	$thecollection->getObjects($theuid, $theCollectionName);
+}
+
+// create and populate collection object
+
 
 // Get attributes needed for header
 // $title for the html page

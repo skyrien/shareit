@@ -11,7 +11,7 @@
 /*=====================================================================
 /* Included files, Globals, HTML Header, Body
 /*===================================================================*/
-require_once './shared/sql_cfg_local.php'; 
+require_once './shared/db/sql_cfg_local.php'; 
 require_once './shared/db_ops.php';
 require_once './shared/user_ops.php';
 require_once './shared/collection_ops.php';

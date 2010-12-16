@@ -17,17 +17,35 @@ class siobject
 
 class sicollection
 {
-	public $collectionid; // collection name
-	public $collectioncount; //count of objects in collection
-	public $objects; // array of objects in collection
+	private $ownerid; // this is the owner of this collection
+	private $collectionid; // collection name
+	private $collectioncount; //count of objects in collection
+	private $objects; // array of objects in collection
 
-	function insertObject($itemid, $name)
+	// This constructor populates the object with data from the DB.
+	function __construct($incominguid, $incomingcollectionid)
 	{
+		// Populate object parameters
+		$this->ownerid = $incominguid;
+		$this->collectionid = $incomingcollectionid;
 		
+	$collectiondata = $this->getCollectionObjects($ownerid, $collectionid);
+		if (!$collectiondata) // failure case
+			return -1;
+		$this->ccount = mysql_num_rows($collectiondata);
+		for ($j = 0; $j < $this->ccount; $j++)
+		{
+			$theObject = new siobject();
+			$theObject->objectid = mysql_result($collectiondata, $j, 'objectid');
+			$theObject->itemname = mysql_result($collectiondata, $j, 'itemname');
+			$theObject->status = mysql_result($collectiondata, $j, 'itemstatus');
+			$theObject->hasid = mysql_result($collectiondata, $j, 'hasid');
+			$this->objects[j] = $theObject;		
+		}
 	}
 	
 	// COLLECTION OPERATIONS
-	/*=== addObject() ================================================
+	/*=== insertObject() ================================================
 	This code creates a new object in tbl_object -- CODE BELOW INCORRECT
 	
 	Flow: 	1. Get ownerid and cid being fetched for
@@ -37,7 +55,7 @@ class sicollection
 	// Input parameters //
 	// string ownerid - uid of the owner of the collection
 	// string collectionid - name of the collection being retrieved
-	function addObjects($ownerid, $collectionid)
+	function insertObject($ownerid, $collectionid)
 	{
 		$this->collectionid = $collectionid;
 		//the type on this object is a mysql result from tbl_collection
