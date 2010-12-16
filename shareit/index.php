@@ -12,7 +12,8 @@
 /*=====================================================================
 /* Included files, Globals, HTML Header, Body
 /*===================================================================*/
-require_once './shared/sql_cfg_local.php'; 
+require_once './shared/db/sql_config.php';
+//require_once './shared/sql_cfg_local.php'; 
 require_once './shared/db_ops.php';
 require_once './shared/user_ops.php';
 require_once './shared/page_ops.php';
@@ -51,7 +52,7 @@ global $postResult;
  
  
  
-/*
+
 //Incoming post (signin) handling logic
 if (isset($_POST['email']) && isset($_POST['password']))
 {
@@ -83,7 +84,7 @@ if (isset($_POST['email']) && isset($_POST['password']))
 		Go to your <a href=\"./home.php\">home page.</a><br><br>";
 	}	
 }
-*/
+
 //Page Header
 /*echo getPageHeader("Welcome to Share.it", "Welcome to Share.it",
 	"Share.it is a social utility to help you share items with your friends and neighbors!");*/
